@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'core/di/service_locator.dart';
-import 'app.dart';
+import 'package:qlm_mobile_suite/core/di/service_locator.dart';
+import 'package:qlm_mobile_suite/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

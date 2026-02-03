@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import '../constants/app_constants.dart';
-import '../services/token_service.dart';
+import 'package:qlm_mobile_suite/core/constants/app_constants.dart';
+import 'package:qlm_mobile_suite/core/services/token_service.dart';
 
 class ApiClient {
   final TokenService _tokenService;
