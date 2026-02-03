@@ -36,4 +36,15 @@ class AppStateManager extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  static String getRoleTitle(String role) {
+    switch (role) {
+      case 'admin':
+        return 'لوحة تحكم المدير';
+      case 'clerk':
+        return 'لوحة تحكم قلم التوثيق';
+      default:
+        return 'لوحة تحكم الأمين الشرعي';
+    }
+  }
 }

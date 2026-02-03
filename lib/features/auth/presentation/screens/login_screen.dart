@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/viewmodels/auth_viewmodel.dart';
-import 'package:qlm_mobile_suite/core/theme/app_theme.dart';
+import 'package:qlm_mobile_suite/features/home/presentation/screens/home_screen.dart';
+import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
+// import 'package:qlm_mobile_suite/core/theme/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -33,10 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (success && mounted) {
-      // Navigate to Home or specific role dashboard
-      // TODO: Implement navigation
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تم تسجيل الدخول بنجاح')),
+      // Sync Theme/Role with State Manager
+      final user = viewModel.user!;
+      context.read<AppStateManager>().setRole(user.role);
+
+      // Navigate to Home
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
     } else if (mounted && viewModel.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
