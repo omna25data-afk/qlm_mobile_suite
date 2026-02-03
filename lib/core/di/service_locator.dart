@@ -5,7 +5,10 @@ import 'package:qlm_mobile_suite/features/auth/data/repositories/auth_repository
 import 'package:qlm_mobile_suite/features/auth/domain/repositories/auth_repository.dart';
 import 'package:qlm_mobile_suite/features/auth/domain/usecases/login_usecase.dart';
 import 'package:qlm_mobile_suite/features/auth/domain/usecases/logout_usecase.dart';
-// import 'package:qlm_mobile_suite/core/services/database_service.dart';
+import 'package:qlm_mobile_suite/core/database/local_database_service.dart';
+import 'package:qlm_mobile_suite/features/registry/data/repositories/registry_repository_impl.dart';
+import 'package:qlm_mobile_suite/features/registry/domain/repositories/registry_repository.dart';
+import 'package:qlm_mobile_suite/features/registry/domain/usecases/get_registry_entries_usecase.dart';
 
 final locator = GetIt.instance;
 
@@ -25,8 +28,12 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => LoginUseCase(locator<AuthRepository>()));
   locator.registerLazySingleton(() => LogoutUseCase(locator<AuthRepository>()));
 
-  // Database (Initialized later)
-  // locator.registerLazySingleton(() => DatabaseService());
+  // Database
+  locator.registerLazySingleton(() => LocalDatabaseService());
 
-  // Repositories & Services will be added here
+  // Registry Feature
+  locator.registerLazySingleton<RegistryRepository>(
+    () => RegistryRepositoryImpl(locator<LocalDatabaseService>(), locator<ApiClient>()),
+  );
+  locator.registerLazySingleton(() => GetRegistryEntriesUseCase(locator<RegistryRepository>()));
 }
