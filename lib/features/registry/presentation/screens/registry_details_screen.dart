@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/entities/registry_entry_entity.dart';
+import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_form_screen.dart';
 import 'package:intl/intl.dart';
 
 class RegistryDetailsScreen extends StatelessWidget {
@@ -19,7 +20,10 @@ class RegistryDetailsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit_rounded),
             onPressed: () {
-              // TODO: Navigate to Edit
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => RegistryFormScreen(entry: entry)),
+              );
             },
           ),
         ],

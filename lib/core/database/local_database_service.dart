@@ -95,6 +95,35 @@ class LocalDatabaseService {
             FOREIGN KEY (registry_entry_uuid) REFERENCES registry_entries (uuid) ON DELETE CASCADE
           )
         ''');
+
+        await db.execute('''
+          CREATE TABLE sale_contracts (
+            uuid TEXT PRIMARY KEY,
+            registry_entry_uuid TEXT,
+            seller_name TEXT,
+            seller_national_id TEXT,
+            buyer_name TEXT,
+            buyer_national_id TEXT,
+            sale_type TEXT,
+            sale_subtype TEXT,
+            sale_area REAL,
+            sale_area_qasab TEXT,
+            sale_area_sqm REAL,
+            sale_price REAL,
+            tax_amount REAL,
+            tax_receipt_number TEXT,
+            zakat_amount REAL,
+            zakat_receipt_number TEXT,
+            property_type TEXT,
+            property_location TEXT,
+            property_boundaries TEXT,
+            deed_number TEXT,
+            item_description TEXT,
+            payment_method TEXT,
+            witnesses TEXT,
+            FOREIGN KEY (registry_entry_uuid) REFERENCES registry_entries (uuid) ON DELETE CASCADE
+          )
+        ''');
       },
     );
   }
