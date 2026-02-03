@@ -69,17 +69,27 @@ class RegistryRepositoryImpl implements RegistryRepository {
         }
       });
       
-      
-      // 2. Push Local Changes
-      final List<Map<String, dynamic>> unSyncedMaps = await db.query(
-        'registry_entries',
-        where: 'is_synced = ?',
-        whereArgs: [0],
-      );
-
       if (unSyncedMaps.isNotEmpty) {
-        final List<Map<String, dynamic>> entriesToPush = unSyncedMaps;
-        await _apiClient.dio.post('/sync/push', data: {'entries': entriesToPush});
+        // Prepare entries with their sub-contract data
+        List<Map<String, dynamic>> payload = [];
+        for (var map in unSyncedMaps) {
+          Map<String, dynamic> entryData = Map.from(map);
+          final contractType = entryData['contract_type_id'];
+          final uuid = entryData['uuid'];
+          
+          // Fetch sub-contract if applicable
+          if (contractType == 1) { // Marriage
+            final sub = await db.query('marriage_contracts', where: 'registry_entry_uuid = ?', whereArgs: [uuid]);
+            if (sub.isNotEmpty) entryData['marriage_contract'] = sub.first;
+          } else if (contractType == 2) { // Sale
+            final sub = await db.query('sale_contracts', where: 'registry_entry_uuid = ?', whereArgs: [uuid]);
+            if (sub.isNotEmpty) entryData['sale_contract'] = sub.first;
+          }
+          
+          payload.add(entryData);
+        }
+
+        await _apiClient.dio.post('/sync/push', data: {'entries': payload});
         
         // Mark as synced locally
         await db.transaction((txn) async {
