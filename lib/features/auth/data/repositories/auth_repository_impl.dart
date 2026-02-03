@@ -1,10 +1,9 @@
-import 'dart:io';
-import '../../../../core/network/api_client.dart';
-import '../../../../core/services/token_service.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../models/user_model.dart';
 import 'package:dio/dio.dart';
+import 'package:qlm_mobile_suite/core/network/api_client.dart';
+import 'package:qlm_mobile_suite/core/services/token_service.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/entities/user_entity.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/repositories/auth_repository.dart';
+import 'package:qlm_mobile_suite/features/auth/data/models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final ApiClient _apiClient;

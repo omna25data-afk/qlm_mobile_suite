@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
-import '../services/token_service.dart';
+import 'package:qlm_mobile_suite/core/theme/app_theme.dart';
+import 'package:qlm_mobile_suite/core/services/token_service.dart';
 
 class AppStateManager extends ChangeNotifier {
   final TokenService _tokenService;

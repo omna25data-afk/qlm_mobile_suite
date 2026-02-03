@@ -1,4 +1,4 @@
-import '../domain/entities/user_entity.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/entities/user_entity.dart';
 
 abstract class AuthRepository {
   Future<User> login(String email, String password);

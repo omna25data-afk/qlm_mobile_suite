@@ -1,4 +1,4 @@
-import '../domain/entities/user_entity.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends User {
   UserModel({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../domain/usecases/login_usecase.dart';
-import '../domain/entities/user_entity.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/usecases/login_usecase.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/entities/user_entity.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final LoginUseCase _loginUseCase;

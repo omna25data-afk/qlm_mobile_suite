@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/auth_viewmodel.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:qlm_mobile_suite/features/auth/presentation/viewmodels/auth_viewmodel.dart';
+import 'package:qlm_mobile_suite/core/theme/app_theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
