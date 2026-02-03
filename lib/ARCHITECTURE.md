@@ -1,4 +1,5 @@
-// This folder structure is initialized according to Clean Architecture & Feature-First principles.
+# QLM Mobile Suite Architecture
+
 // Root: lib/
 //   core/            -> Global infrastructure
 //   common/          -> Shared UI/Logic
