@@ -69,8 +69,30 @@ class RegistryRepositoryImpl implements RegistryRepository {
         }
       });
       
-      // 2. Push Local Changes (Implement later)
-      // TODO: Implement push local changes
+      
+      // 2. Push Local Changes
+      final List<Map<String, dynamic>> unSyncedMaps = await db.query(
+        'registry_entries',
+        where: 'is_synced = ?',
+        whereArgs: [0],
+      );
+
+      if (unSyncedMaps.isNotEmpty) {
+        final List<Map<String, dynamic>> entriesToPush = unSyncedMaps;
+        await _apiClient.dio.post('/sync/push', data: {'entries': entriesToPush});
+        
+        // Mark as synced locally
+        await db.transaction((txn) async {
+          for (var map in unSyncedMaps) {
+            await txn.update(
+              'registry_entries',
+              {'is_synced': 1},
+              where: 'uuid = ?',
+              whereArgs: [map['uuid']],
+            );
+          }
+        });
+      }
     } catch (e) {
       throw Exception('Sync failed: $e');
     }

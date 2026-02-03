@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/registry_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/entities/registry_entry_entity.dart';
+import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_details_screen.dart';
+import 'package:uuid/uuid.dart';
+import 'package:qlm_mobile_suite/features/registry/data/models/registry_entry_model.dart';
 
 class RegistryListScreen extends StatefulWidget {
   const RegistryListScreen({super.key});
@@ -36,8 +39,22 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
       ),
       body: _buildBody(viewModel, theme),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Navigate to Create Entry
+        onPressed: () async {
+          // Dummy Create for demonstration
+          final newEntry = RegistryEntryModel(
+            uuid: const Uuid().v4(),
+            firstPartyName: 'قيد تجريبي جديد',
+            secondPartyName: 'تجربة الإضافة',
+            status: 'draft',
+            createdAt: DateTime.now(),
+            isSynced: false,
+          );
+          await context.read<RegistryViewModel>().saveEntry(newEntry);
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('تم إنشاء المسودة محلياً')),
+            );
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -131,7 +148,12 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
         ),
         trailing: const Icon(Icons.chevron_right_rounded),
         onTap: () {
-          // TODO: Navigate to Details
+          Navigator.push(
+            context, 
+            MaterialPageRoute(
+              builder: (_) => RegistryDetailsScreen(entry: entry),
+            ),
+          );
         },
       ),
     );

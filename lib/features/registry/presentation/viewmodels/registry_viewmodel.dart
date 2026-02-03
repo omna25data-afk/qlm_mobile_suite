@@ -47,4 +47,9 @@ class RegistryViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> saveEntry(RegistryEntry entry) async {
+    await _repository.saveEntry(entry);
+    await loadEntries(localOnly: true);
+  }
 }
