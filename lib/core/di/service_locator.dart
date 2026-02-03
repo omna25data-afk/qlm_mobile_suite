@@ -9,6 +9,7 @@ import 'package:qlm_mobile_suite/core/database/local_database_service.dart';
 import 'package:qlm_mobile_suite/features/registry/data/repositories/registry_repository_impl.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/repositories/registry_repository.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/usecases/get_registry_entries_usecase.dart';
+import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/registry_viewmodel.dart';
 
 final locator = GetIt.instance;
 
@@ -36,4 +37,9 @@ Future<void> setupLocator() async {
     () => RegistryRepositoryImpl(locator<LocalDatabaseService>(), locator<ApiClient>()),
   );
   locator.registerLazySingleton(() => GetRegistryEntriesUseCase(locator<RegistryRepository>()));
+  
+  locator.registerFactory(() => RegistryViewModel(
+    locator<GetRegistryEntriesUseCase>(),
+    locator<RegistryRepository>(),
+  ));
 }

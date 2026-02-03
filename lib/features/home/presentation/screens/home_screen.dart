@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/screens/login_screen.dart';
+import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_list_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -85,20 +86,22 @@ class HomeScreen extends StatelessWidget {
       crossAxisSpacing: 15,
       mainAxisSpacing: 15,
       children: [
-        _buildMenuCard('السجلات', Icons.book_rounded, Colors.green),
-        _buildMenuCard('القيود الجديدة', Icons.add_circle_outline, Colors.blue),
-        _buildMenuCard('المزامنة', Icons.sync_rounded, Colors.orange),
-        _buildMenuCard('الإحصائيات', Icons.bar_chart_rounded, Colors.purple),
+        _buildMenuCard('السجلات', Icons.book_rounded, Colors.green, () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => const RegistryListScreen()));
+        }),
+        _buildMenuCard('القيود الجديدة', Icons.add_circle_outline, Colors.blue, () {}),
+        _buildMenuCard('المزامنة', Icons.sync_rounded, Colors.orange, () {}),
+        _buildMenuCard('الإحصائيات', Icons.bar_chart_rounded, Colors.purple, () {}),
       ],
     );
   }
 
-  Widget _buildMenuCard(String title, IconData icon, Color color) {
+  Widget _buildMenuCard(String title, IconData icon, Color color, VoidCallback onTap) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         borderRadius: BorderRadius.circular(15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

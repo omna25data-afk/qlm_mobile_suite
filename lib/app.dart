@@ -24,6 +24,9 @@ class QlmSuiteApp extends StatelessWidget {
             locator<LogoutUseCase>(),
           ),
         ),
+        ChangeNotifierProvider(
+          create: (_) => locator<RegistryViewModel>(),
+        ),
       ],
       child: Consumer<AppStateManager>(
         builder: (context, state, child) {

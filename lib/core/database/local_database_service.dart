@@ -73,6 +73,28 @@ class LocalDatabaseService {
             is_synced INTEGER DEFAULT 0
           )
         ''');
+
+        await db.execute('''
+          CREATE TABLE marriage_contracts (
+            uuid TEXT PRIMARY KEY,
+            registry_entry_uuid TEXT,
+            husband_name TEXT,
+            groom_national_id TEXT,
+            husband_birth_date TEXT,
+            groom_age INTEGER,
+            wife_name TEXT,
+            bride_national_id TEXT,
+            wife_birth_date TEXT,
+            wife_age INTEGER,
+            bride_age INTEGER,
+            guardian_name TEXT,
+            guardian_relation TEXT,
+            dowry_amount REAL,
+            dowry_paid REAL,
+            witnesses TEXT,
+            FOREIGN KEY (registry_entry_uuid) REFERENCES registry_entries (uuid) ON DELETE CASCADE
+          )
+        ''');
       },
     );
   }
