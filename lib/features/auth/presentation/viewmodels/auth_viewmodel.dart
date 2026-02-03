@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:qlm_mobile_suite/features/auth/domain/usecases/login_usecase.dart';
+import 'package:qlm_mobile_suite/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:qlm_mobile_suite/features/auth/domain/entities/user_entity.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final LoginUseCase _loginUseCase;
+  final LogoutUseCase _logoutUseCase;
 
-  AuthViewModel(this._loginUseCase);
+  AuthViewModel(this._loginUseCase, this._logoutUseCase);
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -30,6 +32,21 @@ class AuthViewModel extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return false;
+    }
+  }
+
+  Future<void> logout() async {
+    _isLoading = true;
+    notifyListeners();
+    
+    try {
+      await _logoutUseCase.execute();
+      _user = null;
+    } catch (e) {
+      _errorMessage = e.toString().replaceAll('Exception: ', '');
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
   }
 

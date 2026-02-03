@@ -18,7 +18,10 @@ class QlmSuiteApp extends StatelessWidget {
           create: (_) => AppStateManager(locator<TokenService>()),
         ),
         ChangeNotifierProvider(
-          create: (_) => AuthViewModel(locator<LoginUseCase>()),
+          create: (_) => AuthViewModel(
+            locator<LoginUseCase>(),
+            locator<LogoutUseCase>(),
+          ),
         ),
       ],
       child: Consumer<AppStateManager>(
