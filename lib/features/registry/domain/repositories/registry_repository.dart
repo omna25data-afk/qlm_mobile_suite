@@ -1,4 +1,4 @@
-import '../domain/entities/registry_entry_entity.dart';
+import 'package:qlm_mobile_suite/features/registry/domain/entities/registry_entry_entity.dart';
 
 abstract class RegistryRepository {
   Future<List<RegistryEntry>> getEntries({bool localOnly = false});

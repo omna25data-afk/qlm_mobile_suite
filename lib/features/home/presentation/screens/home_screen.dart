@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
       case 'clerk':
         return _buildClerkDashboard();
       default:
-        return _buildGuardianDashboard();
+        return _buildGuardianDashboard(context);
     }
   }
 
@@ -80,7 +80,7 @@ class HomeScreen extends StatelessWidget {
     return const Center(child: Text('لوحة تحكم قلم التوثيق - قيد التنفيذ'));
   }
 
-  Widget _buildGuardianDashboard() {
+  Widget _buildGuardianDashboard(BuildContext context) {
     return GridView.count(
       crossAxisCount: 2,
       crossAxisSpacing: 15,

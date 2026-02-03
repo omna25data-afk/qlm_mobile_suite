@@ -95,7 +95,7 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
       child: ListTile(
         contentPadding: const EdgeInsets.all(12),
         leading: CircleAvatar(
-          backgroundColor: statusColor.withOpacity(0.1),
+          backgroundColor: statusColor.withValues(alpha: 0.1),
           child: Icon(Icons.description_rounded, color: statusColor),
         ),
         title: Text(
@@ -113,7 +113,7 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
+                    color: statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
