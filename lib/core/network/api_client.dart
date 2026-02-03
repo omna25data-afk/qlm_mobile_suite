@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import '../constants/app_constants.dart';
+import '../services/token_service.dart';
 
 class ApiClient {
+  final TokenService _tokenService;
   late Dio dio;
 
-  ApiClient() {
+  ApiClient(this._tokenService) {
     dio = Dio(
       BaseOptions(
         baseUrl: AppConstants.baseUrl,
@@ -20,10 +22,12 @@ class ApiClient {
     // Add Interceptors for Auth and Logging
     dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
-          // TODO: Fetch token from secure storage and add to headers
-          // options.headers['Authorization'] = 'Bearer $token';
-          // options.headers['X-Auth-Token'] = token; // Hostinger fix
+        onRequest: (options, handler) async {
+          final token = await _tokenService.getToken();
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+            options.headers['X-Auth-Token'] = token; // Hostinger fix
+          }
           return handler.next(options);
         },
         onError: (DioException e, handler) {
