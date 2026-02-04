@@ -6,6 +6,7 @@ import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/app_logo.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/custom_button.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/custom_text_field.dart';
+import 'dart:ui';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,16 +15,45 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
 
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: const Interval(0.2, 1.0, curve: Curves.easeOutCubic),
+    ));
+
+    _animationController.forward();
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -40,15 +70,27 @@ class _LoginScreenState extends State<LoginScreen> {
       final user = viewModel.user!;
       context.read<AppStateManager>().setRole(user.role);
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        PageRouteBuilder(
+          pageBuilder: (_, animation, __) => const HomeScreen(),
+          transitionsBuilder: (_, animation, __, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
       );
     } else if (mounted && viewModel.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(viewModel.errorMessage!),
-          backgroundColor: Colors.redAccent,
+          content: Row(
+            children: [
+              const Icon(Icons.error_outline_rounded, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(child: Text(viewModel.errorMessage!)),
+            ],
+          ),
+          backgroundColor: Colors.red.shade700,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          margin: const EdgeInsets.all(16),
         ),
       );
     }
@@ -60,129 +102,240 @@ class _LoginScreenState extends State<LoginScreen> {
     final viewModel = context.watch<AuthViewModel>();
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              theme.colorScheme.primary.withValues(alpha: 0.8),
-              theme.colorScheme.primary,
-              theme.colorScheme.surface,
-            ],
-            stops: const [0.0, 0.3, 0.6],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const AppLogo(size: 100, color: Colors.white),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'نظام الأمين الشرعي',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const Text(
-                    'الجمهورية اليمنية - وزارة العدل',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  Container(
-                    padding: const EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(32),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
+      backgroundColor: theme.colorScheme.surface,
+      body: Stack(
+        children: [
+          // 1. Dynamic Background
+          _buildBackground(theme),
+
+          // 2. Main Content
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Header Section
+                        _buildHeader(theme),
+                        
+                        const SizedBox(height: 48),
+
+                        // Login Form Card
+                        _buildLoginForm(theme, viewModel),
+                        
+                        const SizedBox(height: 32),
+                        
+                        // Footer
+                        _buildFooter(theme),
                       ],
                     ),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'تسجيل الدخول للمتابعة',
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 32),
-                          CustomTextField(
-                            controller: _emailController,
-                            label: 'البريد الإلكتروني',
-                            hint: 'example@domain.com',
-                            prefixIcon: Icons.alternate_email_rounded,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) return 'يرجى إدخال البريد الإلكتروني';
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextField(
-                            controller: _passwordController,
-                            label: 'كلمة المرور',
-                            hint: '••••••••',
-                            prefixIcon: Icons.lock_outline_rounded,
-                            obscureText: !_isPasswordVisible,
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _isPasswordVisible
-                                    ? Icons.visibility_off_rounded
-                                    : Icons.visibility_rounded,
-                                color: theme.colorScheme.primary,
-                              ),
-                              onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) return 'يرجى إدخال كلمة المرور';
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 12),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton(
-                              onPressed: () {},
-                              child: const Text('نسيت كلمة المرور؟'),
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          CustomButton(
-                            text: 'دخول الآمن',
-                            isLoading: viewModel.isLoading,
-                            onPressed: _handleLogin,
-                            icon: Icons.login_rounded,
-                          ),
-                        ],
-                      ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBackground(ThemeData theme) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+      ),
+      child: Stack(
+        children: [
+          // Top Organic Shape
+          Positioned(
+            top: -150,
+            left: -100,
+            child: Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    theme.colorScheme.primary.withValues(alpha: 0.15),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Bottom Organic Shape
+          Positioned(
+            bottom: -100,
+            right: -50,
+            child: Container(
+              width: 300,
+              height: 300,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [
+                    theme.colorScheme.secondary.withValues(alpha: 0.1),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // Subtle Pattern Overlay
+          Positioned.fill(
+            child: CustomPaint(
+              painter: GridPatternPainter(
+                color: theme.colorScheme.primary.withValues(alpha: 0.03),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: AppLogo(size: 80, color: theme.colorScheme.primary),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'نظام الأمين الشرعي',
+          style: theme.textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.w900,
+            color: theme.colorScheme.primary,
+            letterSpacing: -0.5,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
+          ),
+          child: Text(
+            'الجمهورية اليمنيـة - وزارة العـدل',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLoginForm(ThemeData theme, AuthViewModel viewModel) {
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 450),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(32),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 40,
+            offset: const Offset(0, 16),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'تسجيل الدخول',
+                    textAlign: TextAlign.start,
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(height: 40),
-                  const Text(
-                    'الإصدار التدريبي 1.0.0',
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  const SizedBox(height: 8),
+                  Text(
+                    'أدخل بيانات حسابك للمتابعة',
+                    textAlign: TextAlign.start,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  CustomTextField(
+                    controller: _emailController,
+                    label: 'البريد الإلكتروني',
+                    hint: 'name@minj.gov.ye',
+                    prefixIcon: Icons.email_outlined,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (v) => v == null || v.isEmpty ? 'مطلوب' : null,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    controller: _passwordController,
+                    label: 'كلمة المرور',
+                    hint: '••••••••',
+                    prefixIcon: Icons.lock_outline,
+                    obscureText: !_isPasswordVisible,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                        color: theme.colorScheme.primary,
+                      ),
+                      onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                    ),
+                    validator: (v) => v == null || v.isEmpty ? 'مطلوب' : null,
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        foregroundColor: theme.colorScheme.primary,
+                        padding: EdgeInsets.zero,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      child: const Text('هل نسيت كلمة المرور؟', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  CustomButton(
+                    text: 'دخــول',
+                    isLoading: viewModel.isLoading,
+                    onPressed: _handleLogin,
+                    icon: Icons.arrow_back_rounded,
                   ),
                 ],
               ),
@@ -192,4 +345,51 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Widget _buildFooter(ThemeData theme) {
+    return Column(
+      children: [
+        Icon(Icons.shield_outlined, size: 24, color: theme.colorScheme.outline.withValues(alpha: 0.5)),
+        const SizedBox(height: 8),
+        Text(
+          'نظام آمن ومحمي ومشفر بالكامل',
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.outline,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'الإصدار 1.0.0 (Beta)',
+          style: theme.textTheme.labelSmall?.copyWith(
+            color: theme.colorScheme.outline.withValues(alpha: 0.5),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class GridPatternPainter extends CustomPainter {
+  final Color color;
+
+  GridPatternPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+
+    const double spacing = 40;
+
+    for (double i = 0; i < size.width; i += spacing) {
+      canvas.drawLine(Offset(i, 0), Offset(i, size.height), paint);
+    }
+    for (double i = 0; i < size.height; i += spacing) {
+      canvas.drawLine(Offset(0, i), Offset(size.width, i), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
