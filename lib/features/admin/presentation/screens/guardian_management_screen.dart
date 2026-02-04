@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/features/guardian/presentation/viewmodels/guardian_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/guardian/domain/entities/guardian_entity.dart';
+import 'package:qlm_mobile_suite/features/admin/presentation/screens/guardian_details_screen.dart';
 
 class GuardianManagementScreen extends StatefulWidget {
   const GuardianManagementScreen({super.key});
@@ -164,7 +165,12 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
           ],
         ),
         onTap: () {
-          // TODO: Guardian Details
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GuardianDetailsScreen(guardian: guardian),
+            ),
+          );
         },
       ),
     );
