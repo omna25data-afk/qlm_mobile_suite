@@ -170,7 +170,7 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
         ),
         const SizedBox(height: AppSpacing.xs),
         DropdownButtonFormField<String>(
-          value: value,
+          initialValue: value,
           hint: Text(hint),
           decoration: InputDecoration(
             filled: true,

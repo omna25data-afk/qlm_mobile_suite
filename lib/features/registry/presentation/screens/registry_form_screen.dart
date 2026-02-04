@@ -367,7 +367,7 @@ class _RegistryFormScreenState extends State<RegistryFormScreen> {
 
   Widget _buildRecordBookDropdown(RegistryViewModel viewModel) {
     return DropdownButtonFormField<int>(
-      value: _selectedRecordBookId,
+      initialValue: _selectedRecordBookId,
       decoration: InputDecoration(
         labelText: 'اختار سجل السندات',
         filled: true,
@@ -386,7 +386,7 @@ class _RegistryFormScreenState extends State<RegistryFormScreen> {
 
   Widget _buildContractTypeDropdown() {
     return DropdownButtonFormField<int>(
-      value: _selectedContractTypeId,
+      initialValue: _selectedContractTypeId,
       decoration: InputDecoration(
         labelText: 'نوع العقد / التصرف',
         filled: true,
@@ -405,7 +405,7 @@ class _RegistryFormScreenState extends State<RegistryFormScreen> {
 
   Widget _buildStatusDropdown() {
     return DropdownButtonFormField<String>(
-      value: _status,
+      initialValue: _status,
       decoration: InputDecoration(
         labelText: 'حالة القيد الحالية',
         filled: true,
