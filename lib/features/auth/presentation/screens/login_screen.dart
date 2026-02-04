@@ -6,9 +6,6 @@ import 'package:qlm_mobile_suite/features/admin/admin_shell.dart';
 import 'package:qlm_mobile_suite/features/guardian/guardian_shell.dart';
 import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/app_logo.dart';
-import 'package:qlm_mobile_suite/core/presentation/widgets/custom_button.dart';
-import 'package:qlm_mobile_suite/core/presentation/widgets/custom_text_field.dart';
-import 'dart:ui';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -182,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    theme.colorScheme.primary.withOpacity(0.15),
+                    theme.colorScheme.primary.withValues(alpha: 0.15),
                     Colors.transparent,
                   ],
                 ),
@@ -200,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    theme.colorScheme.secondary.withOpacity(0.1),
+                    theme.colorScheme.secondary.withValues(alpha: 0.1),
                     Colors.transparent,
                   ],
                 ),
@@ -211,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           Positioned.fill(
             child: CustomPaint(
               painter: GridPatternPainter(
-                color: theme.colorScheme.primary.withOpacity(0.03),
+                color: theme.colorScheme.primary.withValues(alpha: 0.03),
               ),
             ),
           ),
@@ -230,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.1),
+                color: theme.colorScheme.primary.withValues(alpha: 0.1),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
@@ -251,9 +248,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
           decoration: BoxDecoration(
-            color: theme.colorScheme.primary.withOpacity(0.05),
+            color: theme.colorScheme.primary.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: theme.colorScheme.primary.withOpacity(0.1)),
+            border: Border.all(color: theme.colorScheme.primary.withValues(alpha: 0.1)),
           ),
           child: Text(
             'الجمهورية اليمنيـة - وزارة العـدل',
@@ -275,10 +272,10 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 40,
             offset: const Offset(0, 16),
           ),
@@ -317,7 +314,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                 hintText: 'name@minj.gov.ye',
                 prefixIcon: Icon(Icons.email_outlined, color: theme.colorScheme.primary),
                 filled: true,
-                fillColor: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+                fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -343,7 +340,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
                 filled: true,
-                fillColor: theme.colorScheme.surfaceVariant.withOpacity(0.5),
+                fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -393,7 +390,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   Widget _buildFooter(ThemeData theme) {
     return Column(
       children: [
-        Icon(Icons.shield_outlined, size: 24, color: theme.colorScheme.outline.withOpacity(0.5)),
+        Icon(Icons.shield_outlined, size: 24, color: theme.colorScheme.outline.withValues(alpha: 0.5)),
         const SizedBox(height: 8),
         Text(
           'نظام آمن ومحمي ومشفر بالكامل',
@@ -405,7 +402,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         Text(
           'الإصدار 1.0.0 (Beta)',
           style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.outline.withOpacity(0.5),
+            color: theme.colorScheme.outline.withValues(alpha: 0.5),
           ),
         ),
       ],
