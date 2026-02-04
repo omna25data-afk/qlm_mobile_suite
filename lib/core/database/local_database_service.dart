@@ -124,6 +124,40 @@ class LocalDatabaseService {
             FOREIGN KEY (registry_entry_uuid) REFERENCES registry_entries (uuid) ON DELETE CASCADE
           )
         ''');
+
+        await db.execute('''
+          CREATE TABLE guardians (
+            uuid TEXT PRIMARY KEY,
+            first_name TEXT,
+            father_name TEXT,
+            family_name TEXT,
+            full_name TEXT,
+            phone_number TEXT,
+            home_phone TEXT,
+            birth_date TEXT,
+            birth_place TEXT,
+            proof_type TEXT,
+            proof_number TEXT,
+            issuing_authority TEXT,
+            issue_date TEXT,
+            expiry_date TEXT,
+            qualification TEXT,
+            job TEXT,
+            workplace TEXT,
+            specialization_area_id INTEGER,
+            specialization_area_name TEXT,
+            weapon_license_number TEXT,
+            weapon_license_type TEXT,
+            weapon_license_expiry TEXT,
+            electronic_card_number TEXT,
+            electronic_card_issue_date TEXT,
+            electronic_card_expiry_date TEXT,
+            employment_status TEXT,
+            stop_date TEXT,
+            created_at TEXT,
+            updated_at TEXT
+          )
+        ''');
       },
     );
   }

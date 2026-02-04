@@ -11,35 +11,36 @@ import 'package:qlm_mobile_suite/features/registry/domain/repositories/registry_
 import 'package:qlm_mobile_suite/features/registry/domain/usecases/get_registry_entries_usecase.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/registry_viewmodel.dart';
 
+import 'package:qlm_mobile_suite/features/guardian/domain/repositories/guardian_repository.dart';
+import 'package:qlm_mobile_suite/features/guardian/data/repositories/guardian_repository_impl.dart';
+import 'package:qlm_mobile_suite/features/guardian/domain/usecases/get_guardians_usecase.dart';
+
 final locator = GetIt.instance;
 
 Future<void> setupLocator() async {
   // Services
-  locator.registerLazySingleton(() => TokenService());
-
-  // Network
-  locator.registerLazySingleton(() => ApiClient(locator<TokenService>()));
+  locator.registerLazySingleton<TokenService>(() => TokenService());
+  locator.registerLazySingleton<ApiClient>(() => ApiClient(locator<TokenService>()));
+  locator.registerLazySingleton<LocalDatabaseService>(() => LocalDatabaseService());
 
   // Repositories
   locator.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(locator<ApiClient>(), locator<TokenService>()),
   );
-
-  // UseCases
-  locator.registerLazySingleton(() => LoginUseCase(locator<AuthRepository>()));
-  locator.registerLazySingleton(() => LogoutUseCase(locator<AuthRepository>()));
-
-  // Database
-  locator.registerLazySingleton(() => LocalDatabaseService());
-
-  // Registry Feature
   locator.registerLazySingleton<RegistryRepository>(
     () => RegistryRepositoryImpl(locator<LocalDatabaseService>(), locator<ApiClient>()),
   );
+  locator.registerLazySingleton<GuardianRepository>(
+    () => GuardianRepositoryImpl(locator<LocalDatabaseService>(), locator<ApiClient>()),
+  );
+
+  // Use Cases
+  locator.registerLazySingleton(() => LoginUseCase(locator<AuthRepository>()));
+  locator.registerLazySingleton(() => LogoutUseCase(locator<AuthRepository>()));
   locator.registerLazySingleton(() => GetRegistryEntriesUseCase(locator<RegistryRepository>()));
-  
-  locator.registerFactory(() => RegistryViewModel(
-    locator<GetRegistryEntriesUseCase>(),
-    locator<RegistryRepository>(),
-  ));
+  locator.registerLazySingleton(() => GetGuardiansUseCase(locator<GuardianRepository>()));
+
+  // ViewModels
+  locator.registerFactory(() => RegistryViewModel(locator<GetRegistryEntriesUseCase>(), locator<RegistryRepository>()));
+  locator.registerFactory(() => GuardianViewModel(locator<GetGuardiansUseCase>(), locator<GuardianRepository>()));
 }

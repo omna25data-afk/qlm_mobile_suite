@@ -8,6 +8,7 @@ import 'package:qlm_mobile_suite/features/auth/presentation/screens/login_screen
 import 'package:qlm_mobile_suite/features/auth/domain/usecases/login_usecase.dart';
 import 'package:qlm_mobile_suite/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/registry_viewmodel.dart';
+import 'package:qlm_mobile_suite/features/guardian/presentation/viewmodels/guardian_viewmodel.dart';
 import 'package:qlm_mobile_suite/core/services/token_service.dart';
 
 class QlmSuiteApp extends StatelessWidget {
@@ -28,6 +29,9 @@ class QlmSuiteApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => locator<RegistryViewModel>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => locator<GuardianViewModel>(),
         ),
       ],
       child: Consumer<AppStateManager>(
