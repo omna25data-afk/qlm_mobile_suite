@@ -18,7 +18,12 @@ fi
 
 # 3. Build APK
 echo "🏗️ Building Release APK..."
-if ! flutter build apk --release; then
+
+# IDX Workaround: Suppress shared memory warnings and use local tmp
+export GRADLE_OPTS="-Dorg.gradle.daemon=false -Djava.io.tmpdir=$HOME/tmp"
+mkdir -p $HOME/tmp
+
+if ! flutter build apk --release --no-tree-shake-icons; then
     echo "❌ Build failed."
     exit 1
 fi

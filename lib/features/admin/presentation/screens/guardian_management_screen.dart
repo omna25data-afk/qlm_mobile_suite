@@ -66,7 +66,7 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
               const Center(child: Text('التراخيص - قيد التنفيذ')),
               const Center(child: Text('البطائق - قيد التنفيذ')),
               const Center(child: Text('المناطق - قيد التنفيذ')),
-              const Center(child: Text('التكليفات - قيد التنفيذ')),
+              _buildAssignmentsTab(),
               const Center(child: Text('الفحص والتفتيش - قيد التنفيذ')),
               const Center(child: Text('التقييم - قيد التنفيذ')),
             ],
@@ -172,6 +172,94 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildAssignmentsTab() {
+    final viewModel = context.watch<GuardianViewModel>();
+    final theme = Theme.of(context);
+
+    if (viewModel.isLoading && viewModel.assignments.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (viewModel.assignments.isEmpty) {
+      return const Center(child: Text('لا توجد تكليفات نشطة حالياً'));
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(12),
+      itemCount: viewModel.assignments.length,
+      itemBuilder: (context, index) {
+        final assignment = viewModel.assignments[index];
+        return _buildAssignmentCard(assignment, theme);
+      },
+    );
+  }
+
+  Widget _buildAssignmentCard(dynamic assignment, ThemeData theme) {
+    final isTemp = assignment.assignmentType == 'temporary_delegation';
+    
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Colors.grey.withValues(alpha: 0.1)),
+      ),
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  assignment.assignedGuardianName ?? 'أمين غير معروف',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: (isTemp ? Colors.blue : Colors.green).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    assignment.typeText,
+                    style: TextStyle(
+                      color: isTemp ? Colors.blue : Colors.green,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Icon(Icons.location_on_outlined, size: 18, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text('المنطقة المكلف بها: ${assignment.geographicAreaName ?? '---'}'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                const Icon(Icons.calendar_today_outlined, size: 18, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text('من: ${assignment.startDate?.toString().substring(0, 10) ?? '---'}'),
+                if (assignment.endDate != null) ...[
+                  const SizedBox(width: 12),
+                  const Text('إلى: ', style: TextStyle(color: Colors.grey)),
+                  Text(assignment.endDate!.toString().substring(0, 10)),
+                ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
