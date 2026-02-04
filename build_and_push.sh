@@ -19,9 +19,14 @@ fi
 # 3. Build APK
 echo "🏗️ Building Release APK..."
 
-# IDX Workaround: Suppress shared memory warnings and use local tmp
-export GRADLE_OPTS="-Dorg.gradle.daemon=false -Djava.io.tmpdir=$HOME/tmp"
-mkdir -p $HOME/tmp
+# IDX Workaround: Force ALL Java/Gradle temp files into $HOME/tmp (avoiding system /tmp)
+export HOME_TMP="$HOME/tmp"
+mkdir -p "$HOME_TMP"
+export GRADLE_OPTS="-Dorg.gradle.daemon=false -Djava.io.tmpdir=$HOME_TMP"
+export _JAVA_OPTIONS="-Djava.io.tmpdir=$HOME_TMP"
+
+# Clean previous build artifacts to save space (Crucial for IDX)
+flutter clean
 
 if ! flutter build apk --release --no-tree-shake-icons; then
     echo "❌ Build failed."
