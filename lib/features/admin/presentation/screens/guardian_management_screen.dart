@@ -164,7 +164,7 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
                       width: 64,
                       height: 64,
                       decoration: BoxDecoration(
-                        color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                        color: theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
                         shape: BoxShape.circle,
                       ),
                       child: Center(
@@ -236,7 +236,7 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
+                        color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -319,7 +319,7 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: accentColor.withOpacity(0.1),
+                    color: accentColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -337,7 +337,7 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceVariant.withOpacity(0.2),
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(

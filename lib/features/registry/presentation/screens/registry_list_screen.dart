@@ -28,12 +28,6 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-  @override
-  Widget build(BuildContext context) {
-    final viewModel = context.watch<RegistryViewModel>();
-    final theme = Theme.of(context);
-
-    return Scaffold(
       appBar: AppBar(
         title: const Text(
           'سجل القيود المركزي',
@@ -44,7 +38,7 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
             ),
             child: IconButton(
@@ -149,7 +143,7 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -180,7 +174,7 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                            color: theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
@@ -201,7 +195,7 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: statusColor.withOpacity(0.1),
+                        color: statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(

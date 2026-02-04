@@ -25,7 +25,7 @@ class AppTheme {
       bodyLarge: GoogleFonts.tajawal(
         fontSize: 16,
         fontWeight: FontWeight.w500,
-        color: textColor.withOpacity(0.8),
+        color: textColor.withValues(alpha: 0.8),
       ),
       labelLarge: GoogleFonts.tajawal(
         fontSize: 14,

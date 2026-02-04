@@ -36,7 +36,7 @@ class CustomButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          shadowColor: theme.colorScheme.primary.withOpacity(0.3),
+          shadowColor: theme.colorScheme.primary.withValues(alpha: 0.3),
         ),
         child: isLoading
             ? const SizedBox(
