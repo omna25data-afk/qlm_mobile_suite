@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/home/presentation/screens/home_screen.dart';
+import 'package:qlm_mobile_suite/features/admin/admin_shell.dart';
+import 'package:qlm_mobile_suite/features/guardian/guardian_shell.dart';
 import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/app_logo.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/custom_button.dart';
@@ -68,10 +70,26 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
     if (success && mounted) {
       final user = viewModel.user!;
-      context.read<AppStateManager>().setRole(user.role);
+      final appState = context.read<AppStateManager>();
+      appState.setRole(user.role);
+      appState.setCurrentUser(UserInfo(
+        name: user.name,
+        role: user.role,
+      ));
+
+      // Route to correct shell based on role
+      Widget targetScreen;
+      if (user.role == 'admin') {
+        targetScreen = const AdminShell();
+      } else if (user.role == 'guardian') {
+        targetScreen = const GuardianShell();
+      } else {
+        targetScreen = const HomeScreen(); // Fallback
+      }
+
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          pageBuilder: (_, animation, __) => const HomeScreen(),
+          pageBuilder: (_, animation, __) => targetScreen,
           transitionsBuilder: (_, animation, __, child) {
             return FadeTransition(opacity: animation, child: child);
           },
