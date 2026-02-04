@@ -1,4 +1,6 @@
 #!/bin/bash
+# Restored by Antigravity for Cloud IDX Sync
+
 
 # QLM Mobile Suite - Build & Push Script for IDX
 # This script analyzes the code, builds the APK, zips it, and pushes to Git.
