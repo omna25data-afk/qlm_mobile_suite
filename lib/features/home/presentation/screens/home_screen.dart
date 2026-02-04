@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/screens/login_screen.dart';
-import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_list_screen.dart';
 import 'package:qlm_mobile_suite/features/admin/presentation/screens/admin_main_screen.dart';
 import 'package:qlm_mobile_suite/features/guardian/presentation/screens/guardian_dashboard_screen.dart';
 
@@ -12,7 +11,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appStateManager = context.watch<AppStateManager>();
     final authViewModel = context.watch<AuthViewModel>();
     final user = authViewModel.user;
 

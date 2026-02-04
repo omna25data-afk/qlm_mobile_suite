@@ -4,8 +4,6 @@ import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/regis
 import 'package:qlm_mobile_suite/features/registry/domain/entities/registry_entry_entity.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_details_screen.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_form_screen.dart';
-import 'package:uuid/uuid.dart';
-import 'package:qlm_mobile_suite/features/registry/data/models/registry_entry_model.dart';
 
 class RegistryListScreen extends StatefulWidget {
   const RegistryListScreen({super.key});

@@ -69,6 +69,13 @@ class RegistryRepositoryImpl implements RegistryRepository {
         }
       });
       
+      // 2. Push Local Changes
+      final List<Map<String, dynamic>> unSyncedMaps = await db.query(
+        'registry_entries',
+        where: 'is_synced = ?',
+        whereArgs: [0],
+      );
+
       if (unSyncedMaps.isNotEmpty) {
         // Prepare entries with their sub-contract data
         List<Map<String, dynamic>> payload = [];
