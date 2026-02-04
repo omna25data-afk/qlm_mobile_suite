@@ -22,8 +22,8 @@ echo "🏗️ Building Release APK..."
 # IDX Workaround: Force ALL Java/Gradle temp files into $HOME/tmp (avoiding system /tmp)
 export HOME_TMP="$HOME/tmp"
 mkdir -p "$HOME_TMP"
-export GRADLE_OPTS="-Dorg.gradle.daemon=false -Djava.io.tmpdir=$HOME_TMP"
-export _JAVA_OPTIONS="-Djava.io.tmpdir=$HOME_TMP"
+export GRADLE_OPTS="-Dorg.gradle.daemon=false -Djava.io.tmpdir=$HOME_TMP -XX:-UsePerfData"
+export _JAVA_OPTIONS="-Djava.io.tmpdir=$HOME_TMP -XX:-UsePerfData"
 
 # Clean previous build artifacts to save space (Crucial for IDX)
 flutter clean
@@ -43,8 +43,9 @@ zip -r qlm_suite_build.zip release/
 
 # 5. Commit and Push to Git
 echo "📤 Pushing build to GitHub..."
+CURRENT_BRANCH=$(git branch --show-current)
 git add qlm_suite_build.zip
 git commit -m "Build: New APK Release (ZIP) $(date +'%Y-%m-%d %H:%M')"
-git push origin main
+git push origin "$CURRENT_BRANCH"
 
 echo "✅ Done! You can now download qlm_suite_build.zip from GitHub."
