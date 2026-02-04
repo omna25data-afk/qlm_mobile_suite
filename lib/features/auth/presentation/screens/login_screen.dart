@@ -271,6 +271,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   Widget _buildLoginForm(ThemeData theme, AuthViewModel viewModel) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 450),
+      padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(32),
@@ -283,82 +284,107 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'تسجيل الدخول',
-                    textAlign: TextAlign.start,
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'أدخل بيانات حسابك للمتابعة',
-                    textAlign: TextAlign.start,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  CustomTextField(
-                    controller: _emailController,
-                    label: 'البريد الإلكتروني',
-                    hint: 'name@minj.gov.ye',
-                    prefixIcon: Icons.email_outlined,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (v) => v == null || v.isEmpty ? 'مطلوب' : null,
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    controller: _passwordController,
-                    label: 'كلمة المرور',
-                    hint: '••••••••',
-                    prefixIcon: Icons.lock_outline,
-                    obscureText: !_isPasswordVisible,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
-                        color: theme.colorScheme.primary,
-                      ),
-                      onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
-                    ),
-                    validator: (v) => v == null || v.isEmpty ? 'مطلوب' : null,
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.primary,
-                        padding: EdgeInsets.zero,
-                        visualDensity: VisualDensity.compact,
-                      ),
-                      child: const Text('هل نسيت كلمة المرور؟', style: TextStyle(fontWeight: FontWeight.bold)),
-                    ),
-                  ),
-                  const SizedBox(height: 32),
-                  CustomButton(
-                    text: 'دخــول',
-                    isLoading: viewModel.isLoading,
-                    onPressed: _handleLogin,
-                    icon: Icons.arrow_back_rounded,
-                  ),
-                ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'تسجيل الدخول',
+              textAlign: TextAlign.start,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.onSurface,
               ),
             ),
-          ),
+            const SizedBox(height: 8),
+            Text(
+              'أدخل بيانات حسابك للمتابعة',
+              textAlign: TextAlign.start,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 32),
+            
+            // Email Field
+            TextFormField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              validator: (v) => v == null || v.isEmpty ? 'مطلوب' : null,
+              decoration: InputDecoration(
+                labelText: 'البريد الإلكتروني',
+                hintText: 'name@minj.gov.ye',
+                prefixIcon: Icon(Icons.email_outlined, color: theme.colorScheme.primary),
+                filled: true,
+                fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            
+            // Password Field
+            TextFormField(
+              controller: _passwordController,
+              obscureText: !_isPasswordVisible,
+              validator: (v) => v == null || v.isEmpty ? 'مطلوب' : null,
+              decoration: InputDecoration(
+                labelText: 'كلمة المرور',
+                hintText: '••••••••',
+                prefixIcon: Icon(Icons.lock_outline, color: theme.colorScheme.primary),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                    color: theme.colorScheme.primary,
+                  ),
+                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
+                ),
+                filled: true,
+                fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  foregroundColor: theme.colorScheme.primary,
+                  padding: EdgeInsets.zero,
+                  visualDensity: VisualDensity.compact,
+                ),
+                child: const Text('هل نسيت كلمة المرور؟', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const SizedBox(height: 32),
+            
+            // Login Button
+            SizedBox(
+              height: 56,
+              child: FilledButton.icon(
+                onPressed: viewModel.isLoading ? null : _handleLogin,
+                icon: viewModel.isLoading 
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                    : const Icon(Icons.login_rounded),
+                label: const Text('دخــول', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: FilledButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
