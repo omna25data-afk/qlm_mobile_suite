@@ -24,17 +24,17 @@ if ! flutter build apk --release; then
 fi
 
 # 4. Prepare Release File
-echo "📦 Compressing APK for Git..."
+echo "📦 Preparing ZIP release for mobile..."
 mkdir -p release
 cp build/app/outputs/flutter-apk/app-release.apk release/qlm_suite_release.apk
 
-# Compress using tar (guaranteed on Linux/IDX)
-tar -czvf qlm_suite_build.tar.gz release/
+# Zip the release folder (zip pkg added to dev.nix)
+zip -r qlm_suite_build.zip release/
 
 # 5. Commit and Push to Git
 echo "📤 Pushing build to GitHub..."
-git add qlm_suite_build.tar.gz
-git commit -m "Build: New APK Release $(date +'%Y-%m-%d %H:%M')"
+git add qlm_suite_build.zip
+git commit -m "Build: New APK Release (ZIP) $(date +'%Y-%m-%d %H:%M')"
 git push origin main
 
-echo "✅ Done! You can now download qlm_suite_build.tar.gz from GitHub."
+echo "✅ Done! You can now download qlm_suite_build.zip from GitHub."
