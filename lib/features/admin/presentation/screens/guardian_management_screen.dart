@@ -16,7 +16,7 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 5, vsync: this);
+    _tabController = TabController(length: 7, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GuardianViewModel>().loadGuardians();
     });
@@ -46,10 +46,12 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
             indicatorWeight: 3,
             tabs: const [
               Tab(text: 'الأمناء', icon: Icon(Icons.people_outline_rounded, size: 20)),
+              Tab(text: 'التراخيص', icon: Icon(Icons.assignment_outlined, size: 20)),
+              Tab(text: 'البطائق', icon: Icon(Icons.credit_card_outlined, size: 20)),
+              Tab(text: 'المناطق', icon: Icon(Icons.map_outlined, size: 20)),
               Tab(text: 'التكليفات', icon: Icon(Icons.assignment_ind_outlined, size: 20)),
-              Tab(text: 'التراخيص والبطاقات', icon: Icon(Icons.badge_outlined, size: 20)),
-              Tab(text: 'مناطق الاختصاص', icon: Icon(Icons.map_outlined, size: 20)),
-              Tab(text: 'التفتيش والرقابة', icon: Icon(Icons.fact_check_outlined, size: 20)),
+              Tab(text: 'الفحص والتفتيش', icon: Icon(Icons.fact_check_outlined, size: 20)),
+              Tab(text: 'التقييم', icon: Icon(Icons.star_outline_rounded, size: 20)),
             ],
           ),
         ),
@@ -60,10 +62,12 @@ class _GuardianManagementScreenState extends State<GuardianManagementScreen> wit
             controller: _tabController,
             children: [
               _buildGuardiansTab(),
+              const Center(child: Text('التراخيص - قيد التنفيذ')),
+              const Center(child: Text('البطائق - قيد التنفيذ')),
+              const Center(child: Text('المناطق - قيد التنفيذ')),
               const Center(child: Text('التكليفات - قيد التنفيذ')),
-              const Center(child: Text('التراخيص والبطاقات - قيد التنفيذ')),
-              const Center(child: Text('مناطق الاختصاص - قيد التنفيذ')),
-              const Center(child: Text('التفتيش والرقابة - قيد التنفيذ')),
+              const Center(child: Text('الفحص والتفتيش - قيد التنفيذ')),
+              const Center(child: Text('التقييم - قيد التنفيذ')),
             ],
           ),
         ),
