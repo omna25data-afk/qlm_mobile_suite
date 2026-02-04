@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/entities/registry_entry_entity.dart';
-import 'package:qlm_mobile_suite/features/registry/domain/entities/record_book_entity.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/entities/marriage_contract_entity.dart';
 import 'package:qlm_mobile_suite/features/registry/domain/entities/sale_contract_entity.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/registry_viewmodel.dart';
