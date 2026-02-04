@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/core/di/service_locator.dart';

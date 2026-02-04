@@ -22,7 +22,6 @@ dependencies:
   flutter_secure_storage: ^9.0.0 # Secure tokens
   
   # UI & UX
-  google_fonts: ^6.2.1        # Tajawal Support
   cupertino_icons: ^1.0.6
   intl: ^0.20.2               # Date & Number formatting
   shimmer: ^3.0.0             # Loading states
@@ -51,3 +50,14 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/fonts/
+
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal-Regular.ttf
+        - asset: assets/fonts/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Tajawal-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Tajawal-ExtraBold.ttf
+          weight: 800
