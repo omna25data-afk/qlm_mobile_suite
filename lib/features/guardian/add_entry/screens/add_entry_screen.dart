@@ -1,9 +1,6 @@
 /// Add Entry Screen - Form for creating new registry entry
 import 'package:flutter/material.dart';
 import 'package:qlm_mobile_suite/core/theme/app_spacing.dart';
-import 'package:qlm_mobile_suite/core/theme/app_colors.dart';
-import 'package:qlm_mobile_suite/core/presentation/widgets/custom_text_field.dart';
-import 'package:qlm_mobile_suite/core/presentation/widgets/custom_button.dart';
 
 class AddEntryScreen extends StatefulWidget {
   const AddEntryScreen({super.key});
@@ -65,31 +62,31 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
             const SizedBox(height: AppSpacing.md),
 
             // First Party
-            CustomTextField(
+            _buildTextField(
               controller: _firstPartyController,
               label: 'الطرف الأول',
               hint: 'اسم الطرف الأول',
-              prefixIcon: Icons.person,
+              icon: Icons.person,
               validator: (v) => v?.isEmpty == true ? 'مطلوب' : null,
             ),
             const SizedBox(height: AppSpacing.md),
 
             // Second Party
-            CustomTextField(
+            _buildTextField(
               controller: _secondPartyController,
               label: 'الطرف الثاني',
               hint: 'اسم الطرف الثاني',
-              prefixIcon: Icons.person_outline,
+              icon: Icons.person_outline,
               validator: (v) => v?.isEmpty == true ? 'مطلوب' : null,
             ),
             const SizedBox(height: AppSpacing.md),
 
             // Notes
-            CustomTextField(
+            _buildTextField(
               controller: _notesController,
               label: 'ملاحظات',
               hint: 'ملاحظات إضافية (اختياري)',
-              prefixIcon: Icons.notes,
+              icon: Icons.notes,
               maxLines: 3,
             ),
             const SizedBox(height: AppSpacing.xl),
@@ -98,22 +95,60 @@ class _AddEntryScreenState extends State<AddEntryScreen> {
             Row(
               children: [
                 Expanded(
-                  child: CustomButton(
-                    label: 'حفظ كمسودة',
-                    variant: ButtonVariant.outlined,
+                  child: OutlinedButton(
                     onPressed: _saveDraft,
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                      ),
+                    ),
+                    child: const Text('حفظ كمسودة'),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
-                  child: CustomButton(
-                    label: 'إرسال',
+                  child: FilledButton(
                     onPressed: _submit,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                      ),
+                    ),
+                    child: const Text('إرسال'),
                   ),
                 ),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    String? hint,
+    IconData? icon,
+    int maxLines = 1,
+    String? Function(String?)? validator,
+  }) {
+    final theme = Theme.of(context);
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      validator: validator,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: icon != null ? Icon(icon, color: theme.colorScheme.primary) : null,
+        filled: true,
+        fillColor: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+          borderSide: BorderSide.none,
         ),
       ),
     );

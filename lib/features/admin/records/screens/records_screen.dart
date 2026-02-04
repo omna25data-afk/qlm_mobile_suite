@@ -1,6 +1,5 @@
 /// Records Management Screen with 2 tabs (السجلات - القيود)
 import 'package:flutter/material.dart';
-import 'package:qlm_mobile_suite/core/theme/app_spacing.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/empty_state.dart';
 
 class RecordsScreen extends StatelessWidget {

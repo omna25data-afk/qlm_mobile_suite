@@ -2,12 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:qlm_mobile_suite/core/theme/app_theme.dart';
 import 'package:qlm_mobile_suite/core/services/token_service.dart';
 
+/// Simple user info for display purposes
+class UserInfo {
+  final String name;
+  final String? avatarUrl;
+  final String role;
+
+  const UserInfo({
+    required this.name,
+    this.avatarUrl,
+    required this.role,
+  });
+}
+
 class AppStateManager extends ChangeNotifier {
   final TokenService _tokenService;
   
   ThemeData _currentTheme = AppTheme.guardianTheme;
   ThemeMode _themeMode = ThemeMode.system;
   String _currentRole = 'guardian';
+  bool _isOnline = true;
+  UserInfo? _currentUser;
 
   AppStateManager(this._tokenService) {
     _loadSettings();
@@ -16,6 +31,18 @@ class AppStateManager extends ChangeNotifier {
   ThemeData get currentTheme => _currentTheme;
   ThemeMode get themeMode => _themeMode;
   String get currentRole => _currentRole;
+  bool get isOnline => _isOnline;
+  UserInfo? get currentUser => _currentUser;
+
+  void setOnlineStatus(bool online) {
+    _isOnline = online;
+    notifyListeners();
+  }
+
+  void setCurrentUser(UserInfo? user) {
+    _currentUser = user;
+    notifyListeners();
+  }
 
   Future<void> _loadSettings() async {
     final role = await _tokenService.getRole();

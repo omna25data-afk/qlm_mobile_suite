@@ -81,8 +81,8 @@ class AppTheme {
     );
   }
 
-  static CardTheme _buildCardTheme(ColorScheme colors) {
-    return CardTheme(
+  static CardThemeData _buildCardTheme(ColorScheme colors) {
+    return CardThemeData(
       color: colors.surface,
       surfaceTintColor: Colors.transparent,
       elevation: 0,

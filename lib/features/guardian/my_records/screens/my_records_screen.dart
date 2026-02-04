@@ -1,6 +1,5 @@
 /// My Records Screen - Guardian's personal records and entries
 import 'package:flutter/material.dart';
-import 'package:qlm_mobile_suite/core/theme/app_spacing.dart';
 import 'package:qlm_mobile_suite/core/presentation/widgets/empty_state.dart';
 
 class MyRecordsScreen extends StatelessWidget {
