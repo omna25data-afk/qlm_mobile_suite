@@ -43,6 +43,10 @@ class QlmSuiteApp extends StatelessWidget {
             ],
             locale: const Locale('ar', 'AE'),
             theme: state.currentTheme,
+            darkTheme: ThemeData.dark().copyWith(
+              textTheme: GoogleFonts.tajawalTextTheme(ThemeData.dark().textTheme),
+            ),
+            themeMode: state.themeMode,
             home: const LoginScreen(),
           );
         },

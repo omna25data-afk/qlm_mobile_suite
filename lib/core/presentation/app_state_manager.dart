@@ -6,6 +6,7 @@ class AppStateManager extends ChangeNotifier {
   final TokenService _tokenService;
   
   ThemeData _currentTheme = AppTheme.guardianTheme;
+  ThemeMode _themeMode = ThemeMode.system;
   String _currentRole = 'guardian';
 
   AppStateManager(this._tokenService) {
@@ -13,6 +14,7 @@ class AppStateManager extends ChangeNotifier {
   }
 
   ThemeData get currentTheme => _currentTheme;
+  ThemeMode get themeMode => _themeMode;
   String get currentRole => _currentRole;
 
   Future<void> _loadSettings() async {
@@ -33,6 +35,20 @@ class AppStateManager extends ChangeNotifier {
         break;
       default:
         _currentTheme = AppTheme.guardianTheme;
+    }
+    notifyListeners();
+  }
+
+  void setThemeMode(ThemeMode mode) {
+    _themeMode = mode;
+    notifyListeners();
+  }
+
+  void toggleTheme() {
+    if (_themeMode == ThemeMode.light) {
+      _themeMode = ThemeMode.dark;
+    } else {
+      _themeMode = ThemeMode.light;
     }
     notifyListeners();
   }
