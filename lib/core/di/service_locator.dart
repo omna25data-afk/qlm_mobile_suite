@@ -14,6 +14,7 @@ import 'package:qlm_mobile_suite/features/registry/presentation/viewmodels/regis
 import 'package:qlm_mobile_suite/features/guardian/domain/repositories/guardian_repository.dart';
 import 'package:qlm_mobile_suite/features/guardian/data/repositories/guardian_repository_impl.dart';
 import 'package:qlm_mobile_suite/features/guardian/domain/usecases/get_guardians_usecase.dart';
+import 'package:qlm_mobile_suite/features/guardian/presentation/viewmodels/guardian_viewmodel.dart';
 
 final locator = GetIt.instance;
 
