@@ -4,6 +4,8 @@
     pkgs.flutter
     pkgs.dart
     pkgs.jdk17
+    pkgs.zip
+    pkgs.gnutar
   ];
   idx.extensions = [
     "Dart-Code.flutter"
