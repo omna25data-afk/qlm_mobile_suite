@@ -39,88 +39,172 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(130),
-        child: AppBar(
-          flexibleSpace: Container(
-            padding: const EdgeInsets.fromLTRB(16, 40, 16, 0),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [theme.colorScheme.primary, theme.colorScheme.primary.withValues(alpha: 0.8)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+        preferredSize: const Size.fromHeight(160),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.primary.withOpacity(0.9),
+              ],
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
             ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // User Welcome Info
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(32),
+              bottomRight: Radius.circular(32),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.primary.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // User Welcome Info
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white24, width: 2),
+                            ),
+                            child: _buildProfileMenu(context),
+                          ),
+                          const SizedBox(width: 12),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'أهلاً بك، ${user?.name ?? "المدير"}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -0.5,
+                                ),
+                              ),
+                              Text(
+                                AppStateManager.getRoleTitle(user?.role ?? 'admin'),
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.7),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      // Action Icons
+                      IconButton(
+                        icon: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.notifications_none_rounded, color: Colors.white, size: 22),
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  // Date Bar
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        const Icon(Icons.calendar_today_rounded, size: 14, color: Colors.white70),
+                        const SizedBox(width: 8),
                         Text(
-                          'أهلاً بك، ${user?.name ?? "المدير"}',
-                          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                          '$hijriDate هـ',
+                          style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text('|', style: TextStyle(color: Colors.white24)),
                         ),
                         Text(
-                          AppStateManager.getRoleTitle(user?.role ?? 'admin'),
+                          '$gregorianDate م',
                           style: const TextStyle(color: Colors.white70, fontSize: 13),
                         ),
                       ],
                     ),
-                    // Action Icons
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-                          onPressed: () {},
-                        ),
-                        _buildProfileMenu(context),
-                      ],
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                // Date Bar
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.calendar_today_rounded, size: 14, color: Colors.white),
-                      const SizedBox(width: 6),
-                      Text(
-                        '$hijriDate هـ - $gregorianDate م',
-                        style: const TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
-      body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: theme.colorScheme.primary,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) => setState(() => _selectedIndex = index),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'الرئيسية'),
-          BottomNavigationBarItem(icon: Icon(Icons.people_rounded), label: 'الأمناء'),
-          BottomNavigationBarItem(icon: Icon(Icons.description_rounded), label: 'السجلات'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart_rounded), label: 'التقارير'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings_suggest_rounded), label: 'الأدوات'),
-        ],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _screens[_selectedIndex],
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: theme.colorScheme.primary,
+          unselectedItemColor: Colors.grey[400],
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 11),
+          onTap: (index) => setState(() => _selectedIndex = index),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_filled),
+              activeIcon: Icon(Icons.home_rounded),
+              label: 'الرئيسية',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people_outline_rounded),
+              activeIcon: Icon(Icons.people_rounded),
+              label: 'الأمناء',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.description_outlined),
+              activeIcon: Icon(Icons.description_rounded),
+              label: 'السجلات',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.analytics_outlined),
+              activeIcon: Icon(Icons.analytics_rounded),
+              label: 'التقارير',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.grid_view_rounded),
+              activeIcon: Icon(Icons.grid_view_sharp),
+              label: 'الأدوات',
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -130,9 +214,11 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
     final authViewModel = context.read<AuthViewModel>();
 
     return PopupMenuButton<String>(
-      icon: const CircleAvatar(
-        radius: 18,
-        backgroundImage: AssetImage('assets/images/placeholder_profile.png'), // Need to add asset
+      offset: const Offset(0, 50),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: const CircleAvatar(
+        radius: 20,
+        backgroundImage: AssetImage('assets/images/placeholder_profile.png'),
         backgroundColor: Colors.white24,
       ),
       onSelected: (value) async {
@@ -155,7 +241,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
         }
       },
       itemBuilder: (context) => [
-        const PopupMenuItem(value: 'profile', child: ListTile(leading: Icon(Icons.person_outline), title: Text('الملف التعريفي'))),
+        const PopupMenuItem(value: 'profile', child: ListTile(leading: Icon(Icons.person_outline_rounded), title: Text('الملف التعريفي'))),
         const PopupMenuItem(value: 'settings', child: ListTile(leading: Icon(Icons.settings_outlined), title: Text('الإعدادات'))),
         PopupMenuItem(
           value: 'theme', 
@@ -165,7 +251,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
           ),
         ),
         const PopupMenuDivider(),
-        const PopupMenuItem(value: 'logout', child: ListTile(leading: Icon(Icons.logout_rounded, color: Colors.red), title: Text('تسجيل الخروج', style: TextStyle(color: Colors.red)))),
+        const PopupMenuItem(value: 'logout', child: ListTile(leading: Icon(Icons.logout_rounded, color: Colors.redAccent), title: Text('تسجيل الخروج', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)))),
       ],
     );
   }
@@ -177,35 +263,100 @@ class AdminHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildStatCard('إجمالي القيود اليوم', '124', Colors.blue),
-          const SizedBox(height: 12),
-          _buildStatCard('الأمناء النشطون', '15', Colors.green),
-          const SizedBox(height: 12),
-          _buildStatCard('قيود معلقة للمراجعة', '8', Colors.orange),
+          const Text(
+            'نظرة عامة على الإحصائيات',
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(child: _buildStatCard('إجمالي القيود', '1,240', Icons.description_rounded, const Color(0xFF3B82F6))),
+              const SizedBox(width: 16),
+              Expanded(child: _buildStatCard('الأمناء', '42', Icons.people_rounded, const Color(0xFF10B981))),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(child: _buildStatCard('معلق للمراجعة', '18', Icons.pending_actions_rounded, const Color(0xFFF59E0B))),
+              const SizedBox(width: 16),
+              Expanded(child: _buildStatCard('تنبيهات النظام', '3', Icons.notifications_active_rounded, const Color(0xFFEF4444))),
+            ],
+          ),
+          const SizedBox(height: 32),
+          // Placeholder for activity chart
+          Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10)],
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   Icon(Icons.bar_chart_rounded, size: 48, color: Colors.grey[200]),
+                   const SizedBox(height: 8),
+                   Text('مخطط النشاط الأسبوعي', style: TextStyle(color: Colors.grey[400], fontSize: 12)),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildStatCard(String title, String value, Color color) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title, style: const TextStyle(fontSize: 16)),
-            Text(
-              value,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: color.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
-        ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
       ),
     );
   }

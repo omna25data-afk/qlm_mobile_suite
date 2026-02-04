@@ -28,26 +28,47 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<RegistryViewModel>();
+    final theme = Theme.of(context);
+
+    return Scaffold(
       appBar: AppBar(
-        title: const Text('سجل القيود المركزي'),
+        title: const Text(
+          'سجل القيود المركزي',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+        ),
+        centerTitle: true,
         actions: [
-          IconButton(
-            icon: viewModel.isLoading 
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Icon(Icons.sync_rounded),
-            onPressed: viewModel.isLoading ? null : () => viewModel.syncData(),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: IconButton(
+              icon: viewModel.isLoading 
+                  ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.sync_rounded, size: 20),
+              onPressed: viewModel.isLoading ? null : () => viewModel.syncData(),
+              color: theme.colorScheme.primary,
+            ),
           ),
         ],
       ),
       body: _buildBody(viewModel, theme),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const RegistryFormScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add_rounded),
+        label: const Text('إضافة قيد جديد', style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: Colors.white,
       ),
     );
   }
@@ -59,31 +80,55 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
 
     if (viewModel.errorMessage != null && viewModel.entries.isEmpty) {
       return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.cloud_off_rounded, size: 64, color: Colors.grey[300]),
+              const SizedBox(height: 16),
+              Text(
+                viewModel.errorMessage!,
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () => viewModel.loadEntries(),
+                icon: const Icon(Icons.refresh_rounded),
+                label: const Text('إعادة المحاولة'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (viewModel.entries.isEmpty) {
+      return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 60, color: Colors.red),
-            const SizedBox(height: 10),
-            Text(viewModel.errorMessage!),
-            ElevatedButton(
-              onPressed: () => viewModel.loadEntries(),
-              child: const Text('إعادة المحاولة'),
+            Icon(Icons.inventory_2_outlined, size: 80, color: Colors.grey[200]),
+            const SizedBox(height: 24),
+            Text(
+              'لا يوجد قيود حالياً',
+              style: TextStyle(fontSize: 18, color: Colors.grey[400], fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'قم بالمزامنة أو إضافة قيد جديد للبدء',
+              style: TextStyle(color: Colors.grey[400]),
             ),
           ],
         ),
       );
     }
 
-    if (viewModel.entries.isEmpty) {
-      return const Center(
-        child: Text('لا يوجد قيود حالياً. قم بالمزامنة أو إضافة قيد جديد.'),
-      );
-    }
-
     return RefreshIndicator(
       onRefresh: () => viewModel.loadEntries(),
       child: ListView.builder(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         itemCount: viewModel.entries.length,
         itemBuilder: (context, index) {
           final entry = viewModel.entries[index];
@@ -94,58 +139,127 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
   }
 
   Widget _buildEntryCard(RegistryEntry entry, ThemeData theme) {
-    final statusColor = entry.status == 'documented' ? Colors.green : Colors.orange;
+    final isDocumented = entry.status == 'documented';
+    final statusColor = isDocumented ? const Color(0xFF10B981) : const Color(0xFFF59E0B);
     
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(12),
-        leading: CircleAvatar(
-          backgroundColor: statusColor.withValues(alpha: 0.1),
-          child: Icon(Icons.description_rounded, color: statusColor),
-        ),
-        title: Text(
-          'قيد رقم: ${entry.serialNumber ?? '---'}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            Text('الأطراف: ${entry.firstPartyName ?? '---'} و ${entry.secondPartyName ?? '---'}'),
-            const SizedBox(height: 4),
-            Row(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (_) => RegistryDetailsScreen(entry: entry),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: statusColor.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    entry.status == 'documented' ? 'موثق' : 'مسودة',
-                    style: TextStyle(color: statusColor, fontSize: 12),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            'رقم القيد: ${entry.serialNumber ?? '---'}',
+                            style: TextStyle(
+                              color: theme.colorScheme.primary,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        if (!entry.isSynced) ...[
+                          const SizedBox(width: 8),
+                          Icon(Icons.cloud_upload_outlined, size: 16, color: Colors.grey[400]),
+                        ],
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: statusColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        isDocumented ? 'موثق' : 'مسودة',
+                        style: TextStyle(
+                          color: statusColor,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                if (!entry.isSynced) ...[
-                  const SizedBox(width: 8),
-                  const Icon(Icons.cloud_off_rounded, size: 16, color: Colors.grey),
-                ],
+                const SizedBox(height: 16),
+                Text(
+                  'الأطراف المتعاقدة:',
+                  style: TextStyle(color: Colors.grey[500], fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                   children: [
+                    Expanded(
+                      child: Text(
+                        entry.firstPartyName ?? '---',
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),
+                    Icon(Icons.swap_horiz_rounded, size: 16, color: Colors.grey[300]),
+                    Expanded(
+                      child: Text(
+                        entry.secondPartyName ?? '---',
+                        textAlign: TextAlign.end,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(height: 32, thickness: 1),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.history_edu_rounded, size: 16, color: theme.colorScheme.primary),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'التفاصيل الكاملة',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey[300]),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
-        trailing: const Icon(Icons.chevron_right_rounded),
-        onTap: () {
-          Navigator.push(
-            context, 
-            MaterialPageRoute(
-              builder: (_) => RegistryDetailsScreen(entry: entry),
-            ),
-          );
-        },
       ),
     );
   }
