@@ -4,7 +4,7 @@ import 'package:qlm_mobile_suite/core/presentation/app_state_manager.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/auth/presentation/screens/login_screen.dart';
 import 'package:qlm_mobile_suite/features/registry/presentation/screens/registry_list_screen.dart';
-import 'package:qlm_mobile_suite/features/admin/presentation/screens/guardian_list_screen.dart';
+import 'package:qlm_mobile_suite/features/admin/presentation/screens/guardian_management_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:hijri/hijri_calendar.dart';
 
@@ -20,7 +20,7 @@ class _AdminMainScreenState extends State<AdminMainScreen> {
 
   final List<Widget> _screens = [
     const AdminHomeScreen(),
-    const GuardianListScreen(),
+    const GuardianManagementScreen(),
     const RegistryListScreen(), // Use existing RegistryList
     const Center(child: Text('التقارير - قيد التنفيذ')),
     const Center(child: Text('الأدوات - قيد التنفيذ')),

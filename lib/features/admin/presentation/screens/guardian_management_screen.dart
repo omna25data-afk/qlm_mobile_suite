@@ -3,42 +3,78 @@ import 'package:provider/provider.dart';
 import 'package:qlm_mobile_suite/features/guardian/presentation/viewmodels/guardian_viewmodel.dart';
 import 'package:qlm_mobile_suite/features/guardian/domain/entities/guardian_entity.dart';
 
-class GuardianListScreen extends StatefulWidget {
-  const GuardianListScreen({super.key});
+class GuardianManagementScreen extends StatefulWidget {
+  const GuardianManagementScreen({super.key});
 
   @override
-  State<GuardianListScreen> createState() => _GuardianListScreenState();
+  State<GuardianManagementScreen> createState() => _GuardianManagementScreenState();
 }
 
-class _GuardianListScreenState extends State<GuardianListScreen> {
+class _GuardianManagementScreenState extends State<GuardianManagementScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 5, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GuardianViewModel>().loadGuardians();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = context.watch<GuardianViewModel>();
-    final theme = Theme.of(context);
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
-    return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: () => viewModel.syncData(),
-        child: _buildBody(viewModel, theme),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Add New Guardian
-        },
-        child: const Icon(Icons.person_add_rounded),
-      ),
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
+    return Column(
+      children: [
+        // Professional Sub-Tabs
+        Container(
+          color: theme.scaffoldBackgroundColor,
+          child: TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            labelColor: theme.colorScheme.primary,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: theme.colorScheme.primary,
+            indicatorWeight: 3,
+            tabs: const [
+              Tab(text: 'الأمناء', icon: Icon(Icons.people_outline_rounded, size: 20)),
+              Tab(text: 'التراخيص', icon: Icon(Icons.assignment_outlined, size: 20)),
+              Tab(text: 'البطاقات', icon: Icon(Icons.credit_card_outlined, size: 20)),
+              Tab(text: 'المناطق', icon: Icon(Icons.map_outlined, size: 20)),
+              Tab(text: 'التفتيش', icon: Icon(Icons.fact_check_outlined, size: 20)),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+        // Tab Content
+        Expanded(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              _buildGuardiansTab(),
+              const Center(child: Text('التراخيص - قيد التنفيذ')),
+              const Center(child: Text('البطاقات الإلكترونية - قيد التنفيذ')),
+              const Center(child: Text('مناطق الاختصاص - قيد التنفيذ')),
+              const Center(child: Text('تقارير التفتيش - قيد التنفيذ')),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildBody(GuardianViewModel viewModel, ThemeData theme) {
+  Widget _buildGuardiansTab() {
+    final viewModel = context.watch<GuardianViewModel>();
+    final theme = Theme.of(context);
+
     if (viewModel.isLoading && viewModel.guardians.isEmpty) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -51,13 +87,16 @@ class _GuardianListScreenState extends State<GuardianListScreen> {
       return const Center(child: Text('لا يوجد أمناء مسجلون حالياً'));
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(12),
-      itemCount: viewModel.guardians.length,
-      itemBuilder: (context, index) {
-        final guardian = viewModel.guardians[index];
-        return _buildGuardianCard(guardian, theme);
-      },
+    return RefreshIndicator(
+      onRefresh: () => viewModel.syncData(),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(12),
+        itemCount: viewModel.guardians.length,
+        itemBuilder: (context, index) {
+          final guardian = viewModel.guardians[index];
+          return _buildGuardianCard(guardian, theme);
+        },
+      ),
     );
   }
 
