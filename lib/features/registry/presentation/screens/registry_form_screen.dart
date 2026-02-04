@@ -113,7 +113,7 @@ class _RegistryFormScreenState extends State<RegistryFormScreen> {
             const SizedBox(height: 24),
             _buildSectionTitle('بيانات الحالة والمبالغ'),
             DropdownButtonFormField<String>(
-              value: _status,
+              initialValue: _status,
               decoration: const InputDecoration(labelText: 'حالة القيد', border: OutlineInputBorder()),
               items: const [
                 DropdownMenuItem(value: 'draft', child: Text('مسودة')),
