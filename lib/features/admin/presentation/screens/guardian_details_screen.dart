@@ -27,11 +27,11 @@ class GuardianDetailsScreen extends StatelessWidget {
             // Personal Info
             _buildSectionTitle('البيانات الشخصية والمهنية'),
             _buildInfoCard([
-              _buildInfoRow(Icons.badge_rounded, 'الرقم التسلسلي', guardian.serialNumber ?? '---'),
+              _buildInfoRow(Icons.badge_rounded, 'رقم الإثبات', guardian.proofNumber ?? '---'),
               _buildInfoRow(Icons.phone_rounded, 'رقم التواصل', guardian.phoneNumber ?? '---'),
               _buildInfoRow(Icons.location_on_rounded, 'منطقة الاختصاص', guardian.specializationAreaName ?? '---'),
               _buildInfoRow(Icons.cake_rounded, 'تاريخ الميلاد', guardian.birthDate?.toString().substring(0, 10) ?? '---'),
-              _buildInfoRow(Icons.school_rounded, 'المؤهل العلمي', guardian.educationalQualification ?? '---'),
+              _buildInfoRow(Icons.school_rounded, 'المؤهل العلمي', guardian.qualification ?? '---'),
             ]),
             
             const SizedBox(height: 20),
@@ -39,7 +39,7 @@ class GuardianDetailsScreen extends StatelessWidget {
             // License & Card Info
             _buildSectionTitle('حالة التراخيص والبطائق'),
             _buildInfoCard([
-              _buildInfoRow(Icons.assignment_outlined, 'تاريخ انتهاء الترخيص', guardian.licenseExpiryDate?.toString().substring(0, 10) ?? '---'),
+              _buildInfoRow(Icons.assignment_outlined, 'تاريخ انتهاء الترخيص', guardian.expiryDate?.toString().substring(0, 10) ?? '---'),
               _buildInfoRow(Icons.credit_card_outlined, 'تاريخ انتهاء البطاقة', guardian.electronicCardExpiryDate?.toString().substring(0, 10) ?? '---'),
             ]),
             
