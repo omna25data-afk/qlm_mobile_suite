@@ -1,8 +1,8 @@
 class AppConstants {
   static const String appName = "QLM Mobile Suite";
   
-  // API Config (To be updated for IDX)
-  static const String baseUrl = "http://localhost:8000/api";
+  // API Config (Production Server)
+  static const String baseUrl = "https://darkturquoise-lark-306795.hostingersite.com/api";
   
   // Endpoints
   static const String login = "/login";
