@@ -17,9 +17,8 @@ class LocalDatabaseService {
 
     return await openDatabase(
       path,
-      version: AppConstants.dbVersion,
+      version: 2,
       onCreate: (db, version) async {
-        // Tables will be created here
         await db.execute('''
           CREATE TABLE registry_entries (
             uuid TEXT PRIMARY KEY,
@@ -158,6 +157,37 @@ class LocalDatabaseService {
             updated_at TEXT
           )
         ''');
+
+        await db.execute('''
+          CREATE TABLE record_books (
+            id INTEGER PRIMARY KEY,
+            legitimate_guardian_id INTEGER,
+            book_number TEXT,
+            start_date TEXT,
+            end_date TEXT,
+            status TEXT,
+            is_full INTEGER DEFAULT 0,
+            created_at TEXT,
+            updated_at TEXT
+          )
+        ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            CREATE TABLE record_books (
+              id INTEGER PRIMARY KEY,
+              legitimate_guardian_id INTEGER,
+              book_number TEXT,
+              start_date TEXT,
+              end_date TEXT,
+              status TEXT,
+              is_full INTEGER DEFAULT 0,
+              created_at TEXT,
+              updated_at TEXT
+            )
+          ''');
+        }
       },
     );
   }
