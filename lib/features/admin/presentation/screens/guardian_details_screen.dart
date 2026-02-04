@@ -50,7 +50,7 @@ class GuardianDetailsScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // TODO: Perform Actions (Renewal, Message, etc.)
+                  // Actions implemented in future phases
                 },
                 icon: const Icon(Icons.edit_rounded),
                 label: const Text('تعديل بيانات الأمين'),
@@ -83,7 +83,7 @@ class GuardianDetailsScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: (isActive ? Colors.green : Colors.red).withValues(alpha: 0.1),
+              color: (isActive ? Colors.green : Colors.red).withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(

@@ -16,7 +16,10 @@ class _RegistryListScreenState extends State<RegistryListScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<RegistryViewModel>().loadEntries(localOnly: true));
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<RegistryViewModel>().loadEntries(localOnly: true);
+    });
   }
 
   @override
